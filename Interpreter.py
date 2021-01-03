@@ -7,12 +7,14 @@ for i in file:
         if ord(j) in [32, 9, 10]:
             code.append(ord(j))
 file.close()
+
+# Used for error messages0
 FINAL_CODE_LENGTH = len(code)
 
 
 codeOutput = ["import sys", "heap = {}", "stack = []"]
 
-## Instruction Modification Parameters
+# Instruction Modification Parameters
 def stackManipulation():
     if len(code) > 0:
         if code[0] == 32:
@@ -42,6 +44,36 @@ def stackManipulation():
         parsingError()
 
 def arithmetic():
+    if len(code) > 1:
+        if code[0] == 32 and code[1] == 32:
+            del(code[0])
+            del(code[0])
+            codeOutput.append("stack[len(stack) - 2] = stack[len(stack) - 2] + stack[len(stack) - 1]")
+            codeOutput.append("del(stack[len(stack) - 1])")
+        elif code[0] == 32 and code[1] == 9:
+            del(code[0])
+            del(code[0])
+            codeOutput.append("stack[len(stack) - 2] = stack[len(stack) - 2] - stack[len(stack) - 1]")
+            codeOutput.append("del(stack[len(stack) - 1])")
+        elif code[0] == 32 and code[1] == 10:
+            del(code[0])
+            del(code[0])
+            codeOutput.append("stack[len(stack) - 2] = stack[len(stack) - 2] * stack[len(stack) - 1]")
+            codeOutput.append("del(stack[len(stack) - 1])")
+        elif code[0] == 9 and code[1] == 32:
+            del(code[0])
+            del(code[0])
+            codeOutput.append("stack[len(stack) - 2] = stack[len(stack) - 2] // stack[len(stack) - 1]")
+            codeOutput.append("del(stack[len(stack) - 1])")
+        elif code[0] == 9 and code[1] == 9:
+            del(code[0])
+            del(code[0])
+            codeOutput.append("stack[len(stack) - 2] = stack[len(stack) - 2] % stack[len(stack) - 1]")
+            codeOutput.append("del(stack[len(stack) - 1])")
+        else:
+            parsingError()
+    else:
+        parsingError()
     pass
 
 def heapAccess():
@@ -85,6 +117,7 @@ def convertNumber():
 
     number = ""
     while len(code) > 1 and code[0] != 10:# A LineFeed indicates the end of the number
+        #Space is a 0, Tab is a 1, indicates a binary number
         if code[0] == 32:
             number += "0"
         if code[0] == 9:
