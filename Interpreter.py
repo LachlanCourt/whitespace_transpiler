@@ -19,7 +19,8 @@ def stackManipulation():
     if len(code) > 0:
         if code[0] == 32:
             del(code[0])
-            convertNumber()
+            number = convertNumber()
+            codeOutput.append("stack.append(" + number + ")")
             return
         elif len(code) > 1 and code[0] == 10 and code[1] == 32:
             del(code[0])
@@ -40,6 +41,8 @@ def stackManipulation():
 
             codeOutput.append("del(stack[len(stack) - 1])")
             return
+        else:
+            parsingError()
     else:
         parsingError()
 
@@ -77,6 +80,17 @@ def arithmetic():
     pass
 
 def heapAccess():
+    if code[0] == 32:# Store an item on the heap
+        del(code[0])
+        codeOutput.append("heap[stack[len(stack) - 2]] = stack[len(stack) - 1]")
+        codeOutput.append("del(stack[len(stack) - 1])")
+        codeOutput.append("del(stack[len(stack) - 1])")
+    elif code[0] == 9:# Retrieve an item from the heap
+        del(code[0])
+        codeOutput.append("stack.append(heap[stack[len(stack) - 1]])")
+        codeOutput.append("del(stack[len(stack) - 2])")
+    else:
+        parsingError()
     pass
 
 def flowControl():
@@ -127,8 +141,8 @@ def convertNumber():
     if len(code) == 0:
         parsingError()
     del(code[0])
-
-    codeOutput.append("stack.append(" + str((sign* binaryToInt(number))) + ")")
+    
+    return str((sign * binaryToInt(number)))
 
 while len(code) > 0:
     #Determine Instruction Modification Parameter
